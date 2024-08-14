@@ -13,5 +13,13 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 require __DIR__.'/../vendor/autoload.php';
 
 // Bootstrap Laravel and handle the request...
-(require_once __DIR__.'/../bootstrap/app.php')
-    ->handleRequest(Request::capture());
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+// Manually set the base path to the root of the project
+$app->bind('path.public', function() {
+    return __DIR__;
+});
+
+$app->make(Kernel::class)->handle(
+    Request::capture()
+)->send();
